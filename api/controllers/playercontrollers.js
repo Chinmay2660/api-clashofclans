@@ -1,6 +1,6 @@
 const playerModel = require('../models/playerModel');
 
-const getPlayerInfo = async (req, res) => {
+exports.getPlayerInfo = async (req, res) => {
     try {
         const { playerTag, token } = req.query;
         if (!playerTag || !token) {
@@ -12,8 +12,4 @@ const getPlayerInfo = async (req, res) => {
         console.error('Error fetching player data:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
-};
-
-module.exports = {
-    getPlayerInfo
 };
