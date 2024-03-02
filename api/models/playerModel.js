@@ -1,8 +1,10 @@
 const axios = require('axios');
 
-exports.getPlayerData = async (playerTag, token) => {
+const baseURL = 'https://cocproxy.royaleapi.dev/v1/players/';
+
+const makeRequest = async (url, token) => {
     try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/players/%23${playerTag}`, {
+        const response = await axios.get(url, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -11,4 +13,9 @@ exports.getPlayerData = async (playerTag, token) => {
     } catch (error) {
         throw error;
     }
+};
+
+exports.getPlayerData = async (playerTag, token) => {
+    const url = `${baseURL}%23${playerTag}`;
+    return makeRequest(url, token);
 };

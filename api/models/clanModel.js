@@ -1,9 +1,10 @@
 const axios = require('axios');
 
-//required attention
-exports.getClanCurrentWarLeagueGroupData = async (clanTag, token) => {
+const baseURL = 'https://cocproxy.royaleapi.dev/v1/clans/';
+
+const makeRequest = async (url, token) => {
     try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}/currentwar/leaguegroup`, {
+        const response = await axios.get(url, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -14,96 +15,42 @@ exports.getClanCurrentWarLeagueGroupData = async (clanTag, token) => {
     }
 };
 
-//required attention
+exports.getClanCurrentWarLeagueGroupData = async (clanTag, token) => {
+    const url = `${baseURL}%23${clanTag}/currentwar/leaguegroup`;
+    return makeRequest(url, token);
+};
+
 exports.getClanWarLeagueIndividualWarData = async (warTag, token) => {
-    try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/clanwarleagues/wars/%23${warTag}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+    const url = `${baseURL}clanwarleagues/wars/%23${warTag}`;
+    return makeRequest(url, token);
 };
 
 exports.getClanWarData = async (clanTag, token) => {
-    try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}/warlog`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+    const url = `${baseURL}%23${clanTag}/warlog`;
+    return makeRequest(url, token);
 };
 
-//required attention
 exports.getSearchClanData = async (clanTag, token) => {
-    try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+    const url = `${baseURL}%23${clanTag}`;
+    return makeRequest(url, token);
 };
 
 exports.getClanCurrentWarData = async (clanTag, token) => {
-    try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}/currentwar`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+    const url = `${baseURL}%23${clanTag}/currentwar`;
+    return makeRequest(url, token);
 };
 
 exports.getClanData = async (clanTag, token) => {
-    try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+    const url = `${baseURL}%23${clanTag}`;
+    return makeRequest(url, token);
 };
 
 exports.getClanMembersData = async (clanTag, token) => {
-    try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}/members`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+    const url = `${baseURL}%23${clanTag}/members`;
+    return makeRequest(url, token);
 };
 
-//required attention
 exports.getClanCapitalRaidSeaonsData = async (clanTag, token) => {
-    try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}/capitalraidseasons`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+    const url = `${baseURL}%23${clanTag}/capitalraidseasons`;
+    return makeRequest(url, token);
 };
