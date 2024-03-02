@@ -3,18 +3,14 @@ require('dotenv').config();
 
 const COC_API_KEY = process.env.COC_API_KEY;
 
-const formatClanTag = (clanTag) => {
-    return clanTag.replace('clanTag=', '');
-};
 
 const handleRequest = async (req, res, getDataFunction) => {
     try {
-        const { clanTag } = req.params;
+        const { clanTag } = req.query;
         if (!clanTag) {
             return res.status(400).json({ message: 'Clan tag is required.' });
         }
-        const formattedClanTag = formatClanTag(clanTag);
-        const data = await getDataFunction(formattedClanTag, COC_API_KEY);
+        const data = await getDataFunction(clanTag, COC_API_KEY);
         console.log("Clan Data:", data);
         return res.status(200).json(data);
     } catch (error) {
@@ -29,12 +25,11 @@ exports.getClanCurrentWarLeagueGroupInfo = async (req, res) => {
 
 exports.getClanWarLeagueIndividualWarInfo = async (req, res) => {
     try {
-        const { warTag } = req.params;
+        const { warTag } = req.query;
         if (!warTag) {
             return res.status(400).json({ message: 'War tag is required.' });
         }
-        const formattedWarTag = clanTag.replace('warTag=', '');
-        const clanWarLeagueIndividualWarData = await clanModel.getClanWarLeagueIndividualWarData(formattedWarTag, COC_API_KEY);
+        const clanWarLeagueIndividualWarData = await clanModel.getClanWarLeagueIndividualWarData(warTag, COC_API_KEY);
         console.log("clan Data:", clanWarLeagueIndividualWarData);
         return res.status(200).json(clanWarLeagueIndividualWarData);
     } catch (error) {
