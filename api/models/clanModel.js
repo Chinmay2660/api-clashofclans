@@ -1,5 +1,6 @@
 const axios = require('axios');
 
+//required attention
 exports.getClanCurrentWarLeagueGroupData = async (clanTag, token) => {
     try {
         const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}/currentwar/leaguegroup`, {
@@ -13,9 +14,10 @@ exports.getClanCurrentWarLeagueGroupData = async (clanTag, token) => {
     }
 };
 
+//required attention
 exports.getClanWarLeagueIndividualWarData = async (warTag, token) => {
     try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}`, {
+        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/clanwarleagues/wars/%23${warTag}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -27,6 +29,20 @@ exports.getClanWarLeagueIndividualWarData = async (warTag, token) => {
 };
 
 exports.getClanWarData = async (clanTag, token) => {
+    try {
+        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}/warlog`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+//required attention
+exports.getSearchClanData = async (clanTag, token) => {
     try {
         const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}`, {
             headers: {
@@ -41,20 +57,7 @@ exports.getClanWarData = async (clanTag, token) => {
 
 exports.getClanCurrentWarData = async (clanTag, token) => {
     try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
-};
-
-exports.getSearchClanData = async (clanTag, token) => {
-    try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}`, {
+        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}/currentwar`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -91,9 +94,10 @@ exports.getClanMembersData = async (clanTag, token) => {
     }
 };
 
+//required attention
 exports.getClanCapitalRaidSeaonsData = async (clanTag, token) => {
     try {
-        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}`, {
+        const response = await axios.get(`https://cocproxy.royaleapi.dev/v1/clans/%23${clanTag}/capitalraidseasons`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
