@@ -6,7 +6,7 @@ const playerTag = '29PUGJQ9P'
 
 exports.getPlayerInfo = async (req, res) => {
     try {
-        // const { playerTag } = req.query;
+        // const { playerTag } = req.params;
         if (!playerTag) {
             return res.status(400).json({ message: 'Player tag is required.' });
         }
