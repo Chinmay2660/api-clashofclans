@@ -51,6 +51,22 @@ exports.getClanWarInfo = async (req, res) => {
     }
 };
 
+exports.getSearchClanInfo = async (req, res) => {
+    try {
+        const { clanTag } = req.params;
+        if (!clanTag) {
+            return res.status(400).json({ message: 'Clan tag is required.' });
+        }
+        const formattedClanTag = clanTag.replace('clanTag=', '');
+        const clanSearchData = await clanModel.getSearchClanData(formattedClanTag, COC_API_KEY);
+        console.log("clan Data:", clanSearchData);
+        return res.status(200).json(clanSearchData);
+    } catch (error) {
+        console.error('Error fetching clanSearch data:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 exports.getClanCurrentWarInfo = async (req, res) => {
     try {
         const { clanTag } = req.params;
