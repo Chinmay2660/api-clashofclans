@@ -1,6 +1,9 @@
 const express = require('express');
-const playerRoutes = require('./api/routes/playerRoutes');
-const clanRoutes = require('./api/routes/clanRoutes');
+const playersRoutes = require('./api/routes/playersRoutes');
+const clansRoutes = require('./api/routes/clansRoutes');
+const labelsRoutes = require('./api/routes/labelsRoutes');
+const leaguesRoutes = require('./api/routes/leaguesRoutes');
+const locationsRoutes = require('./api/routes/locationsRoutes');
 const cors = require("cors");
 
 const app = express();
@@ -10,8 +13,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', playerRoutes);
-app.use('/', clanRoutes)
+app.use('/api/players', playersRoutes);
+app.use('/api/clans', clansRoutes)
+app.use('/api/labels', labelsRoutes)
+app.use('/api/leagues', leaguesRoutes)
+app.use('/api/locations', locationsRoutes)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
