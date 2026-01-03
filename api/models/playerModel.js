@@ -1,21 +1,22 @@
-const axios = require('axios');
+/**
+ * Player Model
+ * Handles all player-related API calls
+ */
 
-const baseURL = 'https://cocproxy.royaleapi.dev/v1/players/';
+const { get, post, encodeTag } = require('../utils/apiClient');
 
-const makeRequest = async (url, token) => {
-    try {
-        const response = await axios.get(url, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+/**
+ * Get player data by tag
+ */
+exports.getPlayerData = async (playerTag, token) => {
+  const endpoint = `/players/${encodeTag(playerTag)}`;
+  return get(endpoint, token, 'GetPlayer', 'player');
 };
 
-exports.getPlayerData = async (playerTag, token) => {
-    const url = `${baseURL}%23${playerTag}`;
-    return makeRequest(url, token);
+/**
+ * Verify player API token
+ */
+exports.verifyPlayerToken = async (playerTag, playerToken, apiToken) => {
+  const endpoint = `/players/${encodeTag(playerTag)}/verifytoken`;
+  return post(endpoint, { token: playerToken }, apiToken, 'VerifyPlayerToken', 'player');
 };

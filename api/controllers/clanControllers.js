@@ -1,63 +1,83 @@
+/**
+ * Clan Controllers
+ * Handles all clan-related HTTP endpoints
+ */
+
 const clanModel = require('../models/clanModel');
-require('dotenv').config();
+const { asyncHandler, requireQueryParam, getApiKey } = require('../utils/controllerHelper');
 
-const COC_API_KEY = process.env.COC_API_KEY;
+// Get clan info by tag
+exports.getClanInfo = asyncHandler(async (req) => {
+  const clanTag = requireQueryParam(req, 'clanTag', 'Clan tag is required.');
+  return clanModel.getClanData(clanTag, getApiKey());
+});
 
+// Search clan by tag
+exports.getSearchClanInfo = asyncHandler(async (req) => {
+  const clanTag = requireQueryParam(req, 'clanTag', 'Clan tag is required.');
+  return clanModel.getSearchClanData(clanTag, getApiKey());
+});
 
-const handleRequest = async (req, res, getDataFunction) => {
-    try {
-        const { clanTag } = req.query;
-        if (!clanTag) {
-            return res.status(400).json({ message: 'Clan tag is required.' });
-        }
-        const data = await getDataFunction(clanTag, COC_API_KEY);
-        console.log("Clan Data:", data);
-        return res.status(200).json(data);
-    } catch (error) {
-        console.error('Error fetching clan data:', error);
-        return res.status(500).json({ message: 'Internal server error' });
-    }
-};
+// Get clan members
+exports.getClanMembers = asyncHandler(async (req) => {
+  const clanTag = requireQueryParam(req, 'clanTag', 'Clan tag is required.');
+  return clanModel.getClanMembersData(clanTag, getApiKey());
+});
 
-exports.getClanCurrentWarLeagueGroupInfo = async (req, res) => {
-    await handleRequest(req, res, clanModel.getClanCurrentWarLeagueGroupData);
-};
+// Get clan war log
+exports.getClanWarInfo = asyncHandler(async (req) => {
+  const clanTag = requireQueryParam(req, 'clanTag', 'Clan tag is required.');
+  return clanModel.getClanWarData(clanTag, getApiKey());
+});
 
-exports.getClanWarLeagueIndividualWarInfo = async (req, res) => {
-    try {
-        const { warTag } = req.query;
-        if (!warTag) {
-            return res.status(400).json({ message: 'War tag is required.' });
-        }
-        const clanWarLeagueIndividualWarData = await clanModel.getClanWarLeagueIndividualWarData(warTag, COC_API_KEY);
-        console.log("clan Data:", clanWarLeagueIndividualWarData);
-        return res.status(200).json(clanWarLeagueIndividualWarData);
-    } catch (error) {
-        console.error('Error fetching clanWarIndividualWar data:', error);
-        return res.status(500).json({ message: 'Internal server error' });
-    }
-};
+// Get current clan war
+exports.getClanCurrentWarInfo = asyncHandler(async (req) => {
+  const clanTag = requireQueryParam(req, 'clanTag', 'Clan tag is required.');
+  return clanModel.getClanCurrentWarData(clanTag, getApiKey());
+});
 
-exports.getClanWarInfo = async (req, res) => {
-    await handleRequest(req, res, clanModel.getClanWarData);
-};
+// Get clan capital raid seasons
+exports.getClanCapitalRaidSeaonsInfo = asyncHandler(async (req) => {
+  const clanTag = requireQueryParam(req, 'clanTag', 'Clan tag is required.');
+  return clanModel.getClanCapitalRaidSeaonsData(clanTag, getApiKey());
+});
 
-exports.getSearchClanInfo = async (req, res) => {
-    await handleRequest(req, res, clanModel.getSearchClanData);
-};
+// Get clan war league group
+exports.getClanCurrentWarLeagueGroupInfo = asyncHandler(async (req) => {
+  const clanTag = requireQueryParam(req, 'clanTag', 'Clan tag is required.');
+  return clanModel.getClanCurrentWarLeagueGroupData(clanTag, getApiKey());
+});
 
-exports.getClanCurrentWarInfo = async (req, res) => {
-    await handleRequest(req, res, clanModel.getClanCurrentWarData);
-};
+// Get individual CWL war
+exports.getClanWarLeagueIndividualWarInfo = asyncHandler(async (req) => {
+  const warTag = requireQueryParam(req, 'warTag', 'War tag is required.');
+  return clanModel.getClanWarLeagueIndividualWarData(warTag, getApiKey());
+});
 
-exports.getClanInfo = async (req, res) => {
-    await handleRequest(req, res, clanModel.getClanData);
-};
-
-exports.getClanMembers = async (req, res) => {
-    await handleRequest(req, res, clanModel.getClanMembersData);
-};
-
-exports.getClanCapitalRaidSeaonsInfo = async (req, res) => {
-    await handleRequest(req, res, clanModel.getClanCapitalRaidSeaonsData);
-};
+// Search clans with filters
+exports.searchClans = asyncHandler(async (req) => {
+  const { name, warFrequency, locationId, minMembers, maxMembers, minClanPoints, minClanLevel, labelIds, limit, after, before } = req.query;
+  
+  if (!name || name.length < 3) {
+    const err = new Error('Clan name is required and must be at least 3 characters.');
+    err.status = 400;
+    err.reason = 'badRequest';
+    throw err;
+  }
+  
+  const params = {
+    name,
+    warFrequency,
+    locationId,
+    minMembers,
+    maxMembers,
+    minClanPoints,
+    minClanLevel,
+    labelIds,
+    limit: limit || 20,
+    after,
+    before,
+  };
+  
+  return clanModel.searchClans(params, getApiKey());
+});
