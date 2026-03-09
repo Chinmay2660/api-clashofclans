@@ -57,7 +57,7 @@ exports.getClanCapitalRaidSeaonsData = async (clanTag, token) => {
  */
 exports.getClanCurrentWarLeagueGroupData = async (clanTag, token) => {
   const endpoint = `/clans/${encodeTag(clanTag)}/currentwar/leaguegroup`;
-  return get(endpoint, token, 'GetCWLGroup', 'clan');
+  return get(endpoint, token, 'GetCWLGroup', 'leagueGroup');
 };
 
 /**

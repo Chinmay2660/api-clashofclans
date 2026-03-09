@@ -1,12 +1,5 @@
-/**
- * League Controllers
- * Handles all league-related HTTP endpoints
- */
-
 const leagueModel = require('../models/leagueModel');
 const { asyncHandler, requireRouteParam, getApiKey } = require('../utils/controllerHelper');
-
-// ========== LEAGUE TIERS ==========
 
 exports.getLeagueTiers = asyncHandler(async (req) => {
   const { limit = 50 } = req.query;
@@ -17,8 +10,6 @@ exports.getLeagueTierById = asyncHandler(async (req) => {
   const tierId = requireRouteParam(req, 'tierId', 'Tier ID is required.');
   return leagueModel.getLeagueTierById(tierId, getApiKey());
 });
-
-// ========== REGULAR LEAGUES ==========
 
 exports.getLeagues = asyncHandler(async (req) => {
   const { limit = 50 } = req.query;
@@ -43,8 +34,6 @@ exports.getLeagueSeasonRankings = asyncHandler(async (req) => {
   return leagueModel.getLeagueSeasonRankings(leagueId, seasonId, getApiKey(), limit, after, before);
 });
 
-// ========== WAR LEAGUES ==========
-
 exports.getWarLeagues = asyncHandler(async (req) => {
   const { limit = 50 } = req.query;
   return leagueModel.getWarLeagues(getApiKey(), limit);
@@ -55,8 +44,6 @@ exports.getWarLeagueById = asyncHandler(async (req) => {
   return leagueModel.getWarLeagueById(leagueId, getApiKey());
 });
 
-// ========== CAPITAL LEAGUES ==========
-
 exports.getCapitalLeagues = asyncHandler(async (req) => {
   const { limit = 50 } = req.query;
   return leagueModel.getCapitalLeagues(getApiKey(), limit);
@@ -66,8 +53,6 @@ exports.getCapitalLeagueById = asyncHandler(async (req) => {
   const leagueId = requireRouteParam(req, 'leagueId', 'League ID is required.');
   return leagueModel.getCapitalLeagueById(leagueId, getApiKey());
 });
-
-// ========== BUILDER BASE LEAGUES ==========
 
 exports.getBuilderBaseLeagues = asyncHandler(async (req) => {
   const { limit = 50 } = req.query;
