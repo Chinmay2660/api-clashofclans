@@ -32,6 +32,7 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.use('/api/v1', apiRoutes);
 app.use('/api', apiRoutes);
 
 app.use(notFoundHandler);

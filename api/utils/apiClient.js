@@ -2,6 +2,35 @@ const axios = require('axios');
 
 const COC_API_BASE = 'https://cocproxy.royaleapi.dev/v1';
 
+const CACHE_TTL_MS = {
+  LONG: 15 * 60 * 1000,
+  MEDIUM: 5 * 60 * 1000,
+  SHORT: 2 * 60 * 1000,
+};
+
+const responseCache = new Map();
+
+const getCacheTtlMs = (endpoint) => {
+  const path = (endpoint.startsWith('http') ? endpoint.replace(COC_API_BASE, '') : endpoint).split('?')[0];
+  if (/^\/(leagues|leaguetiers|warleagues|capitalleagues|builderbaseleagues|locations|labels|goldpass)/.test(path)) return CACHE_TTL_MS.LONG;
+  if (/^\/players\/.+/.test(path) || /^\/clans\/%23/.test(path) || /^\/clanwarleagues/.test(path)) return CACHE_TTL_MS.SHORT;
+  return CACHE_TTL_MS.MEDIUM;
+};
+
+const cacheGet = (key) => {
+  const entry = responseCache.get(key);
+  if (!entry) return null;
+  if (Date.now() > entry.expiresAt) {
+    responseCache.delete(key);
+    return null;
+  }
+  return entry.data;
+};
+
+const cacheSet = (key, data, ttlMs) => {
+  responseCache.set(key, { data, expiresAt: Date.now() + ttlMs });
+};
+
 const LogLevel = {
   INFO: '\x1b[36m[INFO]\x1b[0m',
   SUCCESS: '\x1b[32m[SUCCESS]\x1b[0m',
@@ -80,12 +109,20 @@ const validateToken = (token) => {
 const get = async (endpoint, token, context = '', resourceType = 'default') => {
   validateToken(token);
   const url = endpoint.startsWith('http') ? endpoint : `${COC_API_BASE}${endpoint}`;
+  const cacheKey = url;
+  const ttlMs = getCacheTtlMs(endpoint);
+  const cached = cacheGet(cacheKey);
+  if (cached !== null) {
+    logDebug(`Cache hit [${context}]`);
+    return cached;
+  }
   logRequest('GET', url, context);
   try {
     const response = await axios.get(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
     logSuccess(response.status, context);
+    cacheSet(cacheKey, response.data, ttlMs);
     return response.data;
   } catch (error) {
     logError(error, context);
